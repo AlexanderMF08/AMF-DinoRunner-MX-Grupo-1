@@ -26,7 +26,7 @@ class ObstacleManager:
               
         for obstacle in self.obstacles:
             obstacle.update(game.game_speed, self.obstacles)
-            if game.player.dino_rect.colliderect(obstacle.rect):
+            if game.player.dino_rect.colliderect(obstacle.rect) and game.player.shield == False:
                 game.player_heart_manager.reduce_heart()
 
                 if game.player_heart_manager.heart_count > 0:
