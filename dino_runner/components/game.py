@@ -1,3 +1,4 @@
+import random
 import pygame
 from dino_runner.components.dinosaur import Dinosaur
 from dino_runner.components.obstacles.obstacle_manager import ObstacleManager
@@ -5,7 +6,7 @@ from dino_runner.components.player_hearts.player_heart_manager import PlayerHear
 
 from dino_runner.components import text_utils
 from dino_runner.components.power_ups.power_up_manager import PowerUpManager
-from dino_runner.utils.constants import BG, ICON, SCREEN_HEIGHT, SCREEN_WIDTH, TITLE, FPS, HEART_COUNT
+from dino_runner.utils.constants import BG, CLOUD, ICON, RESET, SCREEN_HEIGHT, SCREEN_WIDTH, TITLE, FPS, GAME_OVER
 
 
 class Game:
@@ -19,6 +20,8 @@ class Game:
         self.game_speed = 20
         self.x_pos_bg = 0
         self.y_pos_bg = 380
+        self.x_pos_cloud = SCREEN_WIDTH + random.randint(800, 1000)
+        self.y_pos_cloud = random.randint(50, 100)
 
         self.player = Dinosaur()
         self.obstacle_manager = ObstacleManager()
@@ -28,7 +31,7 @@ class Game:
         self.death_count = 0
         self.points = 0
         self.running = True
-
+        
     def execute(self):
         while self.running:
             if not self.playing:
@@ -66,8 +69,7 @@ class Game:
         self.obstacle_manager.draw(self.screen)
         self.player_heart_manager.draw(self.screen)
         self.power_up_manager.draw(self.screen)
-        
-       
+           
         pygame.display.update()
         pygame.display.flip()
 
@@ -80,6 +82,13 @@ class Game:
             self.x_pos_bg = 0
         self.x_pos_bg -= self.game_speed
 
+        image_2_width = CLOUD.get_width()
+        self.screen.blit(CLOUD, (self.x_pos_cloud, self.y_pos_cloud))
+        if self.x_pos_cloud <= -image_2_width:
+             self.x_pos_cloud = SCREEN_WIDTH + random.randint(2500, 3000)
+             self.screen.blit(CLOUD, (self.x_pos_cloud, self.y_pos_cloud))
+        self.x_pos_cloud -= self.game_speed
+
     def draw_score(self):
         self.points +=1
 
@@ -88,7 +97,17 @@ class Game:
 
         text, text_rect = text_utils.get_score_element(self.points)
         self.player.check_visibility(self.screen)
-        self.screen.blit(text, text_rect)    
+        self.screen.blit(text, text_rect) 
+
+   ## def save_max_score(self):
+    ##    self.list_points = []
+     ##   self.points_new = self.points 
+      ##  self.list_points.append(self.points_new)
+
+      ##  for self.points_new in self.list_points:
+     ##       if self.points
+     ##   else:
+       ##      self.points < self.points_new       
 
     def show_menu(self):
         self.screen.fill((255, 255, 255))
@@ -107,13 +126,17 @@ class Game:
             text, text_rect = text_utils.get_centered_message('Press any key to START')
             self.screen.blit(text, text_rect)
         elif self.death_count > 0:
+            image, image_rect = text_utils.get_centered_image(GAME_OVER,height = half_screen_height -50 )
             text, text_rect = text_utils.get_centered_message('Press any Key to RESTART ')
-            score, score_text = text_utils.get_centered_message('Your Score is: ' + str(self.points),    height = half_screen_height + 50)
-            death, deaht_rect = text_utils.get_centered_message('Death count: ' + str(self.death_count), height = half_screen_height + 100)
+            reset, reset_rect = text_utils.get_centered_image(RESET, height= half_screen_height + 70 )
+            score, score_text = text_utils.get_centered_message('Your Score is: ' + str(self.points),    height = half_screen_height + 100)
+            death, deaht_rect = text_utils.get_centered_message('Death count: ' + str(self.death_count), height = half_screen_height + 150)
 
             self.screen.blit(score, score_text)
             self.screen.blit(text, text_rect)
             self.screen.blit(death, deaht_rect)
+            self.screen.blit(image, image_rect)
+            self.screen.blit(reset, reset_rect)
 
     def handle_key_event_on_menu(self):
         for event in pygame.event.get():

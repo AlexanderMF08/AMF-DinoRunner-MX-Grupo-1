@@ -1,4 +1,4 @@
-from dino_runner.utils.constants import RUNNING, JUMPING, DUCKING, DEFAULT_TYPE, SHIELD_TYPE, RUNNING_SHIELD, JUMPING_SHIELD, DUCKING_SHIELD
+from dino_runner.utils.constants import RUNNING, JUMPING, DUCKING, DEFAULT_TYPE, SHIELD_TYPE, RUNNING_SHIELD, JUMPING_SHIELD, DUCKING_SHIELD, HAMMER_TYPE, RUNNING_HAMMER, JUMPING_HAMMER, DUCKING_HAMMER
 import pygame
 from pygame.sprite import Sprite 
 
@@ -8,9 +8,9 @@ class Dinosaur(Sprite):
     JUMP_VEL = 8.5
     Y_POS_DUCK = 340
     def __init__(self):
-        self.run_image = {DEFAULT_TYPE: RUNNING, SHIELD_TYPE: RUNNING_SHIELD}
-        self.jump_image = {DEFAULT_TYPE: JUMPING, SHIELD_TYPE: JUMPING_SHIELD}
-        self.duck_image = {DEFAULT_TYPE: DUCKING, SHIELD_TYPE: DUCKING_SHIELD}
+        self.run_image = {DEFAULT_TYPE: RUNNING, SHIELD_TYPE: RUNNING_SHIELD, HAMMER_TYPE: RUNNING_HAMMER}
+        self.jump_image = {DEFAULT_TYPE: JUMPING, SHIELD_TYPE: JUMPING_SHIELD, HAMMER_TYPE: JUMPING_HAMMER}
+        self.duck_image = {DEFAULT_TYPE: DUCKING, SHIELD_TYPE: DUCKING_SHIELD, HAMMER_TYPE: DUCKING_HAMMER}
         self.type = DEFAULT_TYPE
         self.image = self.run_image[self.type][0]
         
@@ -26,6 +26,8 @@ class Dinosaur(Sprite):
         self.shield = False
         self.shield_time_up = 0
         self.has_powerup = False
+        self.hammer = False
+        self.hammer_time_up = 0
 
          
     def update(self, user_input):
@@ -97,4 +99,18 @@ class Dinosaur(Sprite):
                 self.shield = False
                 if(self.type == SHIELD_TYPE):
                     self.type = DEFAULT_TYPE
-    
+
+        elif self.hammer:
+            time_to_show = round((self.hammer_time_up - pygame.time.get_ticks()) / 1000, 2)
+            if (time_to_show >= 0):
+                font = pygame.font.Font('freesansbold.ttf', 18)
+                text = font.render(f'Hammer enable for {time_to_show}', True, (0,0,0))
+                text_rect = text.get_rect()
+                text_rect.center = (500, 40)
+                screen.blit(text, text_rect)
+            else:
+                self.hammer = False
+                if(self.type == HAMMER_TYPE):
+                    self.type = DEFAULT_TYPE
+
+                        

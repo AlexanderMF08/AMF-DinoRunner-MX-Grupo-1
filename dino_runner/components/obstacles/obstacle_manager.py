@@ -7,6 +7,7 @@ from dino_runner.utils.constants import LARGE_CACTUS, SMALL_CACTUS, BIRD
 class ObstacleManager:
     def __init__(self):
         self.obstacles = []
+        
     
     def update(self, game):
         if len(self.obstacles) == 0:
@@ -26,20 +27,27 @@ class ObstacleManager:
               
         for obstacle in self.obstacles:
             obstacle.update(game.game_speed, self.obstacles)
-            if game.player.dino_rect.colliderect(obstacle.rect) and game.player.shield == False:
+            if game.player.dino_rect.colliderect(obstacle.rect) and game.player.shield == False and game.player.hammer == False:
                 game.player_heart_manager.reduce_heart()
 
                 if game.player_heart_manager.heart_count > 0:
                     self.obstacles.pop()
-    
                 else:   
-                   pygame.time.delay(1000)
-                   self.obstacles.remove(obstacle)
-                   game.playing = False
-                   game.player_heart_manager.fill_hearts()
-                   game.death_count += 1
-                   break
-
+                    pygame.time.delay(1000)
+                    self.obstacles.remove(obstacle)
+                    game.player.draw
+                    game.playing = False
+                    game.player_heart_manager.fill_hearts()
+                    game.death_count += 1
+                    break
+            
+            elif game.player.hammer == True:
+                 if game.player.dino_rect.colliderect(obstacle.rect):
+                    self.obstacles.pop()
+                
+    
     def draw(self, screen):
         for obstacle in self.obstacles:
             obstacle.draw(screen)
+
+    

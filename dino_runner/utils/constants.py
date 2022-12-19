@@ -73,3 +73,11 @@ DEFAULT_TYPE = "default"
 HEART_COUNT = 5
 
 SHIELD_TYPE = "shield"
+HAMMER_TYPE = "hammer"
+GAME_OVER = pygame.image.load(os.path.join(IMG_DIR, 'Other/GameOver.png'))
+
+HAMMER_LIFE = 3
+
+DINO_DEAD = pygame.image.load(os.path.join(IMG_DIR, 'Dino/DinoDead.png'))
+
+RESET = pygame.image.load(os.path.join(IMG_DIR, 'Other/Reset.png'))
