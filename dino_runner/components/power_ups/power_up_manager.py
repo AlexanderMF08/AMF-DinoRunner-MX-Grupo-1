@@ -8,6 +8,7 @@ class PowerUpManager:
     def __init__(self):
         self.power_ups = []
         self.when_appers = 0
+        self.when_appers_hammer = 0
         self.points = 0
         self.hammer_life = HAMMER_LIFE
     
@@ -46,7 +47,9 @@ class PowerUpManager:
         if len(self.power_ups) == 0:
             if self.when_appers == points:
                 self.when_appers = random.randint(self.when_appers + 120, 500 + self.when_appers)
-                self.power_ups.append(Hammer())
                 self.power_ups.append(Shield())
+            elif self.when_appers_hammer == points + 10:
+                self.when_appers_hammer = random.randint(self.when_appers_hammer + 50, 100 + self.when_appers_hammer)
+                self.power_ups.append(Hammer())
 
             
